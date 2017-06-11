@@ -116,6 +116,7 @@ def animate(i):
 	
 #cria animacao
 anim = animation.FuncAnimation(fig,animate,init_func = init, frames=t.size,interval=0,blit=True,repeat = False)
+#anim.save('basic_animation.mp4', fps =30 , extra_args = ['-vcodec','libx264'] )
 
 plt.show()
 
