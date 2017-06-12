@@ -1,0 +1,151 @@
+\documentclass[dvipsnames,a4paper,11pt]{article}
+\usepackage[brazil]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{listings} 
+\usepackage[section]{placeins}
+
+% You can include more LaTeX packages here 
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	basicstyle=\small,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{mygreen},    % comment style
+	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{blue},       % keyword style
+	language=Python,                 	   % the language of the code
+	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+	numbersep=5pt,                   % how far the line-numbers are from the code
+	numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+	rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	showstringspaces=false,          % underline spaces within strings only
+	showtabs=false,                  % show tabs within strings adding particular underscores
+	%  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+	stringstyle=\color{mymauve},     % string literal style
+	tabsize=2,	                   % sets default tabsize to 2 spaces
+	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+\begin{document}
+
+%\selectlanguage{english} %%% remove comment delimiter ('%') and select language if required
+
+\author{Bruno da silva}
+
+\fontfamily{phv}\selectfont
+\begin{titlepage}
+	\begin{center}
+		{\scshape\Large Universidade Federal Fluminense -UFF \par}
+		\vspace{7cm}
+		{\huge\bfseries Animações com Matplotlib \par}
+		\vspace{6cm}
+		{\itshape Autor Bruno da Silva Machado \par}      
+			
+		\vspace{6.5cm}    
+			
+		\vfill
+		{\large \today\par}
+	\end{center}
+\end{titlepage}
+
+\setcounter{secnumdepth}{0}
+\section{Introdu\c{c}\~{a}o}
+\noindent
+
+Matplotlib \'{e} uma biblioteca de plotagem para o linhagem de programa\c{c}\~{a}o python e uma extens\~{a}o do numpy (numerical python). Ele fornece uma API orientada a objetos incorporada em aplica\c{c}\~{o}es que precis\~{o}a utilizar gr\'{a}ficos. Escolhemos o seu uso por ser uma ferramenta integrada com o python e por sua simplicidade. Nesse trabalho a usaremos para criar animações de modo que possamos ver o comportamento de um pendulo ao longo do tempo. 
+\noindent \eject 
+
+\section{Animações com Matplotlib}
+\noindent 
+
+As ferramentas de animação se centram em torno da matplotlib.animation.Animation classe base, que fornece uma estrutura em torno da qual a funcionalidade de animação é construída. As principais interfaces são TimedAnimation e FuncAnimation , nas quais podem ser lidas na documentação $(http://matplotlib.sourceforge.net/api/animation_api.html)$.Nesse trabalho vamos usar a FuncAnimation ferramenta, comumente a mais usada nas animações
+
+Primeiro usaremos FuncAnimation para fazer uma animação básica de um pendulo simples sujeito as seguintes hipóteses:
+
+\begin{enumerate}
+\item O braço é formado por um fio não flexível que se mantém sempre com o mesmo formato e comprimento.
+\item Toda a massa, ${\displaystyle m\,}$, do pêndulo está concentrada na ponta do braço a uma distância constante ${\displaystyle L\,}$ do eixo.
+\item Não existem outras forças a atuar no sistema senão a gravidade e a força que mantém o eixo do pêndulo fixo. (O movimento é portanto conservativo).
+\item O pêndulo realiza um movimento bidimensional no plano xy.
+\end{enumerate}
+equação do pendulo simples
+\begin{equation}
+{d^{2}\theta  \over dt^{2}}+{g \over L}\sin \theta =0.
+\end{equation}
+
+e por fim animamos um pendulo forçado que é um pêndulo amortecido o torque de uma força periódica $F = F_0 \sin(\omega_D t)$,onde $\omega_D$ t é a frequência angular da força externa, a segunda lei de Newton para rotação deste movimento torna-se:
+
+\begin{equation}
+\ddot{\theta} A \sin(\omega_Dt) − \gamma\dot{\theta} − \omega^2\dot{\theta}\sin(\theta)\
+\end{equation}
+
+\paragraph{}
+\textit{Código em Python}
+\begin{lstlisting}
+fig = plt.figure(facecolor='white')
+line1,=XxT.plot([],[],'k-',lw=2)
+\end{lstlisting}
+Aqui criamos uma janela de figura, com um único eixo na e criamos nosso objeto de linha que será modificado na animação. Observe que aqui simplesmente traçamos uma linha vazia.
+Em seguida, criaremos as funções que fazem a animação acontecer. init() É a função que será chamada para criar o quadro base sobre o qual a animação ocorre. Aqui, usamos apenas uma função simples que define os dados da linha para nada. É importante que esta função retorne o objeto de linha, pois isso indica ao animador quais objetos no enredo para atualizar após cada quadro:
+\begin{lstlisting}
+def init():
+	line1.set_data([],[])
+	line2.set_data([],[])
+	line3.set_data([],[])
+	line4.set_data([],[])
+	return line1,line2,line3,line4,
+\end{lstlisting}
+A próxima peça é a função de animação. É preciso um único parâmetro, o número do quadro i
+
+\begin{lstlisting}
+#funcao animacao
+def animate(i):
+	a = t[:i]
+	b = x[:i]
+	c = v[:i]
+	d = e[:i]
+
+	
+	line1.set_data(a,b)
+	line2.set_data(a,c)
+	line3.set_data(b,c)
+	line4.set_data(a,d)
+	return line1,line2,line3,line4,
+\end{lstlisting}
+Note-se que novamente aqui devolvemos uma tupla dos objetos do da cena que foram modificados. Isso diz ao quadro de animação quais partes do gráfico devem ser animadas.
+Finalmente, criamos o objeto de animação:
+
+\begin{lstlisting}	
+#cria animacao
+anim = animation.FuncAnimation(fig,animate,init_func = init, frames=t.size,interval=0,blit=True,repeat = False)
+\end{lstlisting}
+
+
+\section{Referencia}
+
+\noindent 
+
+N. J. Giordano \& H. Nakanishi, Computational Physics, 2°ed, 2007
+
+3)M. A. Savi, "Din\^amica n\~ao-linear e caos", E-papers, Rio de Janeiro, 2006.
+
+
+\end{document}
+
